@@ -1,10 +1,11 @@
 package selenium.automation.page.objects;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class GoogleHomePage extends BasePage {
@@ -20,19 +21,13 @@ public class GoogleHomePage extends BasePage {
         return driver.findElement(By.id("lst-ib"));
     }
 
-    public WebElement searchButton(){
-
-        return driver.findElement(By.cssSelector("center input[name='btnK']"));
-    }
-
     //region METHODS
 
     public GoogleSearchResultPage doSearchByGoogle(String searchValue){
 
-        searchInput().sendKeys(searchValue);
-        searchButton().click();
-        Assert.assertThat("Title check failed!",driver.getTitle(), CoreMatchers.containsString(searchValue));
+        searchInput().sendKeys(searchValue + Keys.ENTER);
 
+        wait.until(ExpectedConditions.titleContains(searchValue));
         waitForPageLoadByJs();
 
         return new GoogleSearchResultPage(driver, wait);
